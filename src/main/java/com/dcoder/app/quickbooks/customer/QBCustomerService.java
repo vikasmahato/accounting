@@ -25,21 +25,15 @@ public class QBCustomerService implements CustomerService {
     }
 
     @Override
-    public CustomerResponse createCustomer(CustomerRequest customerRequest){
+    public CustomerResponse createCustomer(CustomerRequest customerRequest) throws FMSException {
         DataService service = null;
-        //TODO: get rid of this try-catch and use Aspect instead
-        try {
-            service = DataServiceFactory.getDataService();
-            // add customer with minimum mandatory fields
-            Customer customer = CustomerHelper.transformCustomerRequest(customerRequest);
-            Customer savedCustomer = service.add(customer);
-            LOG.info("Customer with mandatory fields created: " + savedCustomer.getId() + " ::customer name: " + savedCustomer.getDisplayName());
+        service = DataServiceFactory.getDataService();
+        // add customer with minimum mandatory fields
+        Customer customer = CustomerHelper.transformCustomerRequest(customerRequest);
+        Customer savedCustomer = service.add(customer);
+        LOG.info("Customer with mandatory fields created: " + savedCustomer.getId() + " ::customer name: " + savedCustomer.getDisplayName());
 
-            return CustomerResponseBuilder.getCustomerResponse(customer);
-        } catch (FMSException e) {
-            e.printStackTrace();
-        }
-        return null;
+        return CustomerResponseBuilder.getCustomerResponse(customer);
     }
 
     @Override
